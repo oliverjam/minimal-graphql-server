@@ -21,6 +21,7 @@ const server = createServer((request, response) => {
   graphql(schema, query, root, null, variables)
     .then(result => {
       const { data } = result;
+      response.writeHead(200, { "content-type": "application/json" });
       response.end(JSON.stringify(data));
     })
     .catch(error => {
