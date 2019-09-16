@@ -20,9 +20,15 @@ const server = createServer((request, response) => {
 
   graphql(schema, query, root, null, variables)
     .then(result => {
-    const { data } = result;
-    response.end(JSON.stringify(data));
-  });
+      const { data } = result;
+      response.end(JSON.stringify(data));
+    })
+    .catch(error => {
+      console.log(error);
+
+      response.writeHead(500, { "content-type": "application/json" });
+      response.end(JSON.stringify({ errors: [error.message] }));
+    });
 });
 
 server.listen(3333, () => console.log("Listening on http://localhost:3333"));
