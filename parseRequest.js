@@ -15,8 +15,6 @@ function parseRequest(request) {
         if (error) {
           return reject(error);
         }
-        // console.log(data.operationName);
-        // if (data.operationName !== "IntrospectionQuery")
         return resolve(JSON.parse(data));
       });
     }

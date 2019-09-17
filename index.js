@@ -6,10 +6,26 @@ const schema = buildSchema(`
   type Query {
     hello(name: String!): String
   }
+  input TodoInput {
+    text: String!
+  }
+  type Todo {
+    id: ID!
+    text: String!
+    done: Boolean!
+  }
+  type Mutation {
+    createTodo(todo: TodoInput!): Todo
+  }
 `);
 
 const root = {
   hello: variables => `Hello ${variables.name}`,
+  createTodo: input => ({
+    ...input.todo,
+    done: false,
+    id: String(Math.random()),
+  }),
 };
 
 const server = createServer((request, response) => {
