@@ -20,15 +20,22 @@ const server = createServer((request, response) => {
 
   graphql(schema, query, root, null, variables)
     .then(result => {
-      const { data } = result;
+        const { data, errors } = result;
+        if (errors) throw errors;
       response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify(data));
+        response.end(JSON.stringify({ data }));
     })
     .catch(error => {
       console.log(error);
 
-      response.writeHead(500, { "content-type": "application/json" });
-      response.end(JSON.stringify({ errors: [error.message] }));
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(
+          JSON.stringify({
+            errors: Array.isArray(error)
+              ? error.map(e => e.message)
+              : [error.message],
+          })
+        );
     });
 });
 
